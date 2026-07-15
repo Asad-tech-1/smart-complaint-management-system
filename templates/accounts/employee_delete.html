@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Employee{% endblock %}
+{% block page_title %}Delete Employee{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-6">
+
+        <div class="complaint-card text-center">
+
+            <h2 class="text-danger mb-4">
+                🗑 Delete Employee
+            </h2>
+
+            <p>
+
+                Are you sure you want to delete
+
+                <strong>
+
+                    {{ employee.get_full_name|default:employee.username }}
+
+                </strong>?
+
+            </p>
+
+            <p class="text-muted">
+
+                This action cannot be undone.
+
+            </p>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <button class="btn btn-danger">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Delete Employee
+
+                </button>
+
+                <a
+                    href="{% url 'employee_list' %}"
+                    class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

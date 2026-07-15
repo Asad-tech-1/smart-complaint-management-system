@@ -1,0 +1,100 @@
+{% extends "user/base_user.html" %}
+
+{% block page_title %}
+Track Complaint
+{% endblock %}
+
+{% block content %}
+
+<div class="card shadow-sm p-4">
+
+    <h2 class="mb-3">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        Track Complaint
+    </h2>
+
+    <p class="text-secondary">
+        Enter your complaint tracking number.
+    </p>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class="input-group mb-4">
+
+            <input
+                type="text"
+                name="tracking_number"
+                class="form-control"
+                placeholder="CMP-2026-000001"
+                required
+            >
+
+            <button class="btn btn-primary">
+
+                Search
+
+            </button>
+
+        </div>
+
+    </form>
+
+    {% if complaint %}
+
+    <hr>
+
+    <h4>{{ complaint.title }}</h4>
+
+    <table class="table">
+
+        <tr>
+            <th>Tracking Number</th>
+            <td>{{ complaint.tracking_number }}</td>
+        </tr>
+
+        <tr>
+            <th>Status</th>
+            <td>{{ complaint.status|title }}</td>
+        </tr>
+
+        <tr>
+            <th>Priority</th>
+            <td>{{ complaint.priority|title }}</td>
+        </tr>
+
+        <tr>
+            <th>Department</th>
+            <td>{{ complaint.department }}</td>
+        </tr>
+
+        <tr>
+            <th>Submitted</th>
+            <td>{{ complaint.created_at|date:"d M Y - h:i A" }}</td>
+        </tr>
+
+    </table>
+
+    <a
+        href="{% url 'user_complaint_detail' complaint.id %}"
+        class="btn btn-success"
+    >
+
+        View Full Details
+
+    </a>
+
+    {% elif request.method == "POST" %}
+
+    <div class="alert alert-danger">
+
+        No complaint found with this tracking number.
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

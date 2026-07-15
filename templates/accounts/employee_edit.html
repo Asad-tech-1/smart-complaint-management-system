@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Employee{% endblock %}
+{% block page_title %}Edit Employee{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-8">
+
+        <div class="complaint-card">
+
+            <div class="d-flex align-items-center justify-content-between mb-4">
+
+                <div>
+
+                    <h2 class="complaint-title mb-1">
+                        <i class="fa-solid fa-user-pen text-warning"></i>
+                        Edit Employee
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Update employee information.
+                    </p>
+
+                </div>
+
+            </div>
+        
+
+            <form method="POST" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold text-dark">
+                            Username
+                        </label>
+
+                        {{ form.username }}
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold text-dark">
+                            Email
+                        </label>
+
+                        {{ form.email }}
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold text-dark">
+                            First Name
+                        </label>
+
+                        {{ form.first_name }}
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold text-dark">
+                            Last Name
+                        </label>
+
+                        {{ form.last_name }}
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold text-dark">
+                            Department
+                        </label>
+
+                        {{ form.department }}
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold text-dark">
+                            Phone
+                        </label>
+
+                        {{ form.phone }}
+
+                    </div>
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label class="form-label fw-semibold text-dark">
+                        Profile Picture
+                    </label>
+
+                    {{ form.profile_image }}
+
+                </div>
+
+                <div class="form-check form-switch mb-4">
+
+                    {{ form.is_active }}
+
+                    <label class="form-check-label ms-2 fw-semibold text-dark">
+
+                        Active Employee
+
+                    </label>
+
+                </div>
+
+                <hr class="my-4">
+
+                <div class="d-flex gap-3">
+
+                    <button class="btn btn-success">
+
+                        <i class="fa-solid fa-floppy-disk"></i>
+
+                        Save Changes
+
+                    </button>
+
+                    <a href="{% url 'employee_list' %}"
+                       class="btn btn-outline-secondary">
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

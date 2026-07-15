@@ -1,0 +1,28 @@
+{% extends "user/base_user.html" %}
+
+{% block page_title %}Submit Complaint{% endblock %}
+
+{% block content %}
+
+<div class="card p-4" style="background:#678fcf; border-radius:12px;">
+    <h3> Submit New Complaint</h3>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label>Title</label>
+        {{ form.title }}
+
+        <label>Description</label>
+        {{ form.description }}
+
+        <label>Attachment</label>
+        {{ form.attachment }}
+
+        <button class="btn btn-primary mt-3">
+            Submit Complaint
+        </button>
+    </form>
+</div>
+
+{% endblock %}

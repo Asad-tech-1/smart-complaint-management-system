@@ -1,0 +1,27 @@
+# Virtual Environment
+venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment Variables
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Operating System
+Thumbs.db
+.DS_Store
+
+# Django collected static files
+staticfiles/
+
+# User uploaded media
+media/
+
+# Database (optional - recommended)
+db.sqlite3

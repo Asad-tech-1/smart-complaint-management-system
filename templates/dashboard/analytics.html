@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+Analytics
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">
+    📈 Analytics Dashboard
+</h2>
+
+<p class="text-secondary mb-4">
+    Management insights and complaint statistics.
+</p>
+
+<!-- Top Summary Cards -->
+
+<div class="row mb-4">
+
+    <div class="col-md-9">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    📈 Complaint Trend
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <canvas id="trendChart" height="100"></canvas>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</div>
+<div class="row mt-4">
+
+    <div class="col-md-12">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header">
+
+                <h5>
+                    👨‍💼 Staff Performance
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <canvas id="staffChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const trendLabels = {{ trend_labels|safe }};
+const trendValues = {{ trend_values|safe }};
+
+new Chart(document.getElementById("trendChart"), {
+
+    type: "line",
+
+    data: {
+
+        labels: trendLabels,
+
+        datasets: [{
+
+            label: "Complaints",
+
+            data: trendValues,
+
+            borderWidth: 3,
+
+            fill: false,
+
+            tension: 0.3
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+
+                display: true
+
+            }
+
+        }
+
+    }
+
+});
+
+const departmentLabels = {{ department_labels|safe }};
+const departmentValues = {{ department_values|safe }};
+
+new Chart(document.getElementById("departmentChart"), {
+
+    type: "bar",
+
+    data: {
+
+        labels: departmentLabels,
+
+        datasets: [{
+
+            label: "Complaints",
+
+            data: departmentValues,
+
+            borderWidth: 1
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+
+                display: false
+
+            }
+
+        }
+
+    }
+
+});
+const staffLabels = {{ staff_labels|safe }};
+const staffValues = {{ staff_values|safe }};
+
+new Chart(document.getElementById("staffChart"), {
+
+    type: "bar",
+
+    data: {
+
+        labels: staffLabels,
+
+        datasets: [{
+
+            label: "Assigned Complaints",
+
+            data: staffValues,
+
+            backgroundColor: "#198754"
+
+        }]
+
+    }
+
+});
+</script>
+
+{% endblock %}

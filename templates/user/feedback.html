@@ -1,0 +1,104 @@
+{% extends "user/base_user.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3>Rate Our Service</h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <h5 class="mb-3">
+                Complaint Information
+            </h5>
+
+            <table class="table table-bordered">
+
+                <tr>
+                    <th width="200">Tracking Number</th>
+                    <td>{{ complaint.tracking_number }}</td>
+                </tr>
+
+                <tr>
+                    <th>Complaint</th>
+                    <td>{{ complaint.title }}</td>
+                </tr>
+
+                <tr>
+                    <th>Department</th>
+                    <td>{{ complaint.department }}</td>
+                </tr>
+
+                <tr>
+                    <th>Handled By</th>
+                    <td>{{ complaint.assigned_to.username }}</td>
+                </tr>
+
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        <span class="badge bg-success">
+                            {{ complaint.status|title }}
+                        </span>
+                    </td>
+                </tr>
+
+            </table>
+
+            <hr>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Rating
+                    </label>
+
+                    {{ form.rating }}
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Comments
+                    </label>
+
+                    {{ form.comment }}
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-success">
+
+                    Submit Feedback
+
+                </button>
+
+                <a
+                    href="{% url 'my_complaints' %}"
+                    class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

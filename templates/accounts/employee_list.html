@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Employees{% endblock %}
+{% block page_title %}Employee Management{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h2 class="fw-bold">
+        <i class="fa-solid fa-users"></i>
+        Employee Management
+    </h2>
+
+    <a href="{% url 'employee_create' %}" class="btn btn-primary">
+        <i class="fa-solid fa-user-plus"></i>
+        Add Employee
+    </a>
+
+</div>
+
+<form method="GET" class="mb-4">
+
+    <div class="input-group">
+
+        <input
+            type="text"
+            name="search"
+            class="form-control"
+            placeholder="Search employee..."
+            value="{{ request.GET.search }}">
+
+        <button class="btn btn-dark">
+            <i class="fa fa-search"></i>
+        </button>
+
+    </div>
+
+</form>
+
+<div class="complaint-card">
+
+<table class="table table-hover align-middle">
+
+<thead class="table-dark">
+
+<tr>
+
+<th>Employee</th>
+
+<th>Department</th>
+
+<th>Email</th>
+
+<th>Phone</th>
+
+<th>Workload</th>
+
+<th>Performance</th>
+
+<th>Status</th>
+
+<th style="width:170px;">Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for employee in employees %}
+
+<tr>
+
+<!-- Employee -->
+
+<td>
+
+<div class="d-flex align-items-center">
+
+{% if employee.profile_image %}
+
+<img src="{{ employee.profile_image.url }}"
+     style="width:55px;height:55px;border-radius:50%;object-fit:cover;">
+
+{% else %}
+
+<img src="{% static 'images/default-profile.png' %}"
+     style="width:55px;height:55px;border-radius:50%;object-fit:cover;">
+
+{% endif %}
+
+<div class="ms-3">
+
+<div class="fw-bold">
+
+{{ employee.first_name }} {{ employee.last_name }}
+
+</div>
+
+<div class="text-muted small">
+
+@{{ employee.username }}
+
+</div>
+
+</div>
+
+</div>
+
+</td>
+
+<!-- Department -->
+
+<td>
+
+<span class="badge bg-info text-dark px-3 py-2">
+
+{{ employee.department }}
+
+</span>
+
+</td>
+
+<!-- Email -->
+
+<td>
+
+{{ employee.email }}
+
+</td>
+
+<!-- Phone -->
+
+<td>
+
+{{ employee.phone }}
+
+</td>
+
+<!-- Workload -->
+
+<td>
+
+{% if employee.workload == 0 %}
+
+<span class="badge bg-success">
+
+Free
+
+</span>
+
+{% elif employee.workload <= 3 %}
+
+<span class="badge bg-primary">
+
+{{ employee.workload }} Active
+
+</span>
+
+{% elif employee.workload <= 6 %}
+
+<span class="badge bg-warning text-dark">
+
+{{ employee.workload }} Busy
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+{{ employee.workload }} Overloaded
+
+</span>
+
+{% endif %}
+
+</td>
+
+<!-- Performance -->
+
+<td>
+
+{% if employee.average_rating %}
+
+<div class="fw-bold">
+
+{% if employee.average_rating >= 4.5 %}
+
+<span class="text-success">
+
+⭐ {{ employee.average_rating|floatformat:1 }}
+
+</span>
+
+{% elif employee.average_rating >= 3 %}
+
+<span class="text-warning">
+
+⭐ {{ employee.average_rating|floatformat:1 }}
+
+</span>
+
+{% else %}
+
+<span class="text-danger">
+
+⭐ {{ employee.average_rating|floatformat:1 }}
+
+</span>
+
+{% endif %}
+
+</div>
+
+{% else %}
+
+<div class="text-muted">
+
+No Ratings
+
+</div>
+
+{% endif %}
+
+<div class="small text-success">
+
+{{ employee.resolution_rate }}% Resolved
+
+</div>
+
+<div class="small text-muted">
+
+{{ employee.total_reviews }} Review{{ employee.total_reviews|pluralize }}
+
+</div>
+
+</td>
+
+<!-- Status -->
+
+<td>
+
+{% if employee.is_active %}
+
+<span class="badge bg-success">
+
+Active
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+Inactive
+
+</span>
+
+{% endif %}
+
+</td>
+
+<!-- Actions -->
+
+<td>
+
+<a href="{% url 'employee_update' employee.id %}"
+   class="btn btn-warning btn-sm">
+
+<i class="fa fa-edit"></i>
+
+</a>
+
+<a href="{% url 'employee_delete' employee.id %}"
+   class="btn btn-danger btn-sm">
+
+<i class="fa fa-trash"></i>
+
+</a>
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="8" class="text-center py-4">
+
+No Employees Found
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

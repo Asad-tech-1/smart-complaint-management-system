@@ -1,0 +1,254 @@
+{% extends "staff/base_staff.html" %}
+
+{% block page_title %}
+Complaint Workspace
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                {{ complaint.title }}
+            </h2>
+
+            <p class="text-muted">
+                Complaint #{{ complaint.id }}
+            </p>
+
+        </div>
+
+        <div>
+
+            <span class="badge bg-primary p-2">
+                {{ complaint.department }}
+            </span>
+
+            <span class="badge bg-danger p-2">
+                {{ complaint.priority|title }}
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="row">
+
+        <!-- LEFT SIDE -->
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm mb-4">
+
+                <div class="card-header">
+
+                    <h5>Description</h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    {{ complaint.description }}
+
+                    {% if complaint.attachment %}
+
+                    <hr>
+
+                    <img
+                        src="{{ complaint.attachment.url }}"
+                        class="img-fluid rounded">
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- Timeline -->
+
+            <div class="card shadow-sm">
+
+                <div class="card-header">
+
+                    <h5>Activity History</h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% for activity in complaint.activities.all %}
+
+                        <div class="border-bottom mb-3 pb-3">
+
+                            <strong>
+
+                                {{ activity.get_event_type_display }}
+
+                            </strong>
+
+                            <br>
+
+                            {{ activity.message }}
+
+                            <br>
+
+                            <small class="text-muted">
+
+                                {{ activity.created_at }}
+
+                            </small>
+
+                        </div>
+
+                    {% empty %}
+
+                        No activity yet.
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+
+        <div class="col-lg-4">
+
+            <div class="card shadow-sm">
+
+                <div class="card-header bg-success text-white">
+
+                    Update Complaint
+
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+
+                                Status
+
+                            </label>
+
+                            <select
+                                name="status"
+                                class="form-select">
+
+                                <option value="pending"
+                                {% if complaint.status == "pending" %}selected{% endif %}>
+                                    Pending
+                                </option>
+
+                                <option value="in_progress"
+                                {% if complaint.status == "in_progress" %}selected{% endif %}>
+                                    In Progress
+                                </option>
+
+                                <option value="resolved"
+                                {% if complaint.status == "resolved" %}selected{% endif %}>
+                                    Resolved
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+
+                                Resolution Notes
+
+                            </label>
+
+                            <textarea
+                                class="form-control"
+                                rows="6"
+                                name="remarks">{{ complaint.remarks }}</textarea>
+
+                        </div>
+
+
+                        <button class="btn btn-success w-100">
+
+                            Save Update
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+            <div class="card shadow-sm mt-4">
+
+                <div class="card-header">
+
+                    SLA
+
+                </div>
+
+                <div class="card-body">
+
+                    <p>
+
+                        Deadline
+
+                    </p>
+
+                    <h5>
+
+                        {{ complaint.sla_deadline }}
+
+                    </h5>
+
+                    <hr>
+
+                    {% if overdue %}
+
+                        <span class="badge bg-danger">
+
+                            Overdue
+
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-success">
+
+                            Within SLA
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

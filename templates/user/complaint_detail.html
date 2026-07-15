@@ -1,0 +1,137 @@
+{% extends "user/base_user.html" %}
+
+{% block page_title %}
+Complaint Detail
+{% endblock %}
+
+{% block content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        
+
+        <h2>{{ complaint.title }}</h2>
+
+        <hr>
+           
+                <div class="alert alert-primary">
+
+            <h5 class="mb-1">
+
+                Tracking Number
+
+            </h5>
+
+            <h3>
+
+                {{ complaint.tracking_number }}
+
+            </h3>
+
+        </div>
+        <p>
+            <strong>Status:</strong>
+            {{ complaint.status|title }}
+        </p>
+
+        <p>
+            <strong>Priority:</strong>
+            {{ complaint.priority|title }}
+        </p>
+
+        <p>
+            <strong>Department:</strong>
+            {{ complaint.department }}
+        </p>
+
+        <p>
+            <strong>Created:</strong>
+            {{ complaint.created_at|date:"d M Y H:i" }}
+        </p>
+
+        <hr>
+
+        <h4>Description</h4>
+
+        <p>
+            {{ complaint.description }}
+        </p>
+
+                <hr>
+
+        <h5>Attachment</h5>
+
+        {% if complaint.attachment %}
+
+            <a href="{{ complaint.attachment.url }}" target="_blank">
+
+                <img
+                    src="{{ complaint.attachment.url }}"
+                    class="img-fluid rounded shadow"
+                    style="max-width:500px;"
+                >
+
+            </a>
+            <a
+                href="{{ complaint.attachment.url }}"
+                class="btn btn-outline-primary"
+                target="_blank"
+            >
+                Open Full Image
+            </a>
+
+            <hr>
+
+            <h4 class="mt-5">
+                Support Updates
+            </h4>
+
+            {% for remark in remarks %}
+
+            <div class="card mb-3">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+
+                        {{ remark.created_at|date:"d M Y H:i" }}
+
+                    </small>
+
+                    <p class="mt-2 mb-0">
+
+                        {{ remark.message }}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <p class="text-muted">
+
+            No updates from support yet.
+
+            </p>
+
+            {% endfor %}
+
+            <br><br>
+
+        {% else %}
+
+        <p class="text-muted">
+            No attachment uploaded.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

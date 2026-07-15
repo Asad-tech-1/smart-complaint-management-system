@@ -1,0 +1,678 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Complaint Control Center{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+<div>
+
+<h2 class="fw-bold">
+Complaint #{{ complaint.id }}
+</h2>
+
+<h5 class="text-secondary">
+{{ complaint.title }}
+</h5>
+
+</div>
+
+<div>
+
+<span class="badge bg-primary p-2">
+{{ complaint.department }}
+</span>
+
+<span class="badge
+{% if complaint.priority == 'critical' %}
+bg-danger
+{% elif complaint.priority == 'high' %}
+bg-warning text-dark
+{% elif complaint.priority == 'medium' %}
+bg-info text-dark
+{% else %}
+bg-success
+{% endif %}
+p-2">
+
+{{ complaint.priority|upper }}
+
+</span>
+
+<span class="badge
+
+{% if complaint.status == 'resolved' %}
+
+bg-success
+
+{% elif complaint.status == 'in_progress' %}
+
+bg-warning text-dark
+
+{% elif complaint.status == 'pending' %}
+
+bg-secondary
+
+{% elif complaint.status == 'escalated' %}
+
+bg-danger
+
+{% elif complaint.status == 'rejected' %}
+
+bg-dark
+
+{% endif %}
+p-2">
+
+{{ complaint.status|title }}
+
+</span>
+
+</div>
+
+</div>
+
+
+
+<div class="row">
+
+<!-- LEFT COLUMN -->
+
+<div class="col-lg-8">
+
+<div class="card shadow-sm mb-4">
+
+<div class="card-header bg-dark text-white">
+
+<h5 class="mb-0">
+Complaint Description
+</h5>
+
+</div>
+
+<div class="card-body">
+
+<p>
+
+{{ complaint.description }}
+
+</p>
+
+{% if complaint.attachment %}
+
+<hr>
+
+<h6>
+
+Attachment
+
+</h6>
+
+<a href="{{ complaint.attachment.url }}" target="_blank">
+
+<img
+src="{{ complaint.attachment.url }}"
+class="img-fluid rounded"
+style="max-height:300px;">
+
+</a>
+
+{% endif %}
+
+</div>
+
+</div>
+
+
+
+<div class="row">
+
+<div class="col-md-6">
+
+<div class="card shadow-sm mb-4">
+
+<div class="card-header bg-primary text-white">
+
+Reporter Information
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-borderless">
+
+<tr>
+
+<th>Name</th>
+
+<td>
+
+{{ complaint.user.get_full_name|default:complaint.user.username }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>Username</th>
+
+<td>
+
+{{ complaint.user.username }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>Email</th>
+
+<td>
+
+{{ complaint.user.email }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>Phone</th>
+
+<td>
+
+{{ complaint.user.phone|default:"Not Available" }}
+
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="col-md-6">
+
+<div class="card shadow-sm mb-4">
+
+<div class="card-header bg-success text-white">
+
+Complaint Information
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-borderless">
+
+<tr>
+
+<th>Department</th>
+
+<td>{{ complaint.department }}</td>
+
+</tr>
+
+<tr>
+
+<th>Priority</th>
+
+<td>{{ complaint.priority|title }}</td>
+
+</tr>
+
+<tr>
+
+<th>Status</th>
+
+<td>{{ complaint.status|title }}</td>
+
+</tr>
+
+<tr>
+
+<th>Created</th>
+
+<td>
+
+{{ complaint.created_at|date:"d M Y H:i" }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>Age</th>
+
+<td>
+
+{{ complaint_age.days }} Days
+
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- RIGHT COLUMN -->
+
+<div class="col-lg-4">
+
+<div class="card shadow-sm mb-4">
+
+<div class="card-header bg-info text-white">
+
+Assigned Staff
+
+</div>
+
+<div class="card-body">
+
+{% if assigned_staff %}
+
+<h5>
+
+{{ assigned_staff.get_full_name|default:assigned_staff.username }}
+
+</h5>
+
+<p>
+
+Department:
+<strong>
+
+{{ assigned_staff.department }}
+
+</strong>
+
+</p>
+
+<p>
+
+Email:
+<br>
+
+{{ assigned_staff.email }}
+
+</p>
+
+<p>
+
+Current Workload
+
+</p>
+
+<h3 class="text-primary">
+
+{{ staff_workload }}
+
+</h3>
+
+{% else %}
+
+<p>
+
+No Staff Assigned
+
+</p>
+
+{% endif %}
+
+</div>
+
+</div>
+
+
+
+<div class="card shadow-sm">
+
+<div class="card-header bg-danger text-white">
+
+SLA Monitor
+
+</div>
+
+<div class="card-body">
+
+<p>
+
+Deadline
+
+</p>
+
+<h5>
+
+{{ complaint.sla_deadline|date:"d M Y H:i" }}
+
+</h5>
+
+<hr>
+
+{% if overdue %}
+
+<h4 class="text-danger">
+
+OVERDUE
+
+</h4>
+
+{% else %}
+
+<h4 class="text-success">
+
+Within SLA
+
+</h4>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+    <!-- CONTROL FORM -->
+    <!-- ========================= -->
+<!-- ADMIN CONTROL PANEL -->
+<!-- ========================= -->
+
+<div class="card shadow-lg border-0 mt-4">
+
+    <div class="card-header bg-dark text-white">
+
+        <h4 class="mb-0">
+
+            <i class="fa-solid fa-sliders"></i>
+
+            Complaint Control Panel
+
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="row">
+
+                <!-- STATUS -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-bold">
+
+                        Complaint Status
+
+                    </label>
+
+                    <option value="pending"
+                    {% if complaint.status == "pending" %}selected{% endif %}>
+                        Pending
+                    </option>
+
+                    <option value="in_progress"
+                    {% if complaint.status == "in_progress" %}selected{% endif %}>
+                        In Progress
+                    </option>
+
+                    <option value="escalated"
+                    {% if complaint.status == "escalated" %}selected{% endif %}>
+                        Escalated
+                    </option>
+
+                    <option value="resolved"
+                    {% if complaint.status == "resolved" %}selected{% endif %}>
+                        Resolved
+                    </option>
+
+                    <option value="rejected"
+                    {% if complaint.status == "rejected" %}selected{% endif %}>
+                        Rejected
+                    </option>
+
+                </div>
+
+                <!-- ONLY ADMIN CAN REASSIGN -->
+
+                {% if request.user.role == "admin" %}
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-bold">
+
+                        Assigned Staff
+
+                    </label>
+
+                    <select
+                        name="assigned_to"
+                        class="form-select">
+
+                        {% for staff in staff_users %}
+
+                        <option
+                            value="{{ staff.id }}"
+                            {% if complaint.assigned_to and complaint.assigned_to.id == staff.id %}selected{% endif %}>
+
+                            {{ staff.get_full_name|default:staff.username }}
+
+                            ({{ staff.department }})
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- REMARKS -->
+
+            <div class="mb-4">
+
+                <label class="form-label fw-bold">
+
+                    Internal Remarks
+
+                </label>
+
+                <textarea
+                    class="form-control"
+                    rows="5"
+                    name="remarks">{{ complaint.remarks }}</textarea>
+
+            </div>
+
+            <div class="d-flex gap-3">
+
+                <button class="btn btn-success">
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+
+                    Save Changes
+
+                </button>
+
+                {% if request.user.role == "admin" %}
+
+                    <a href="{% url 'all_complaints' %}"
+                       class="btn btn-secondary">
+
+                        Back
+
+                    </a>
+
+                {% else %}
+
+                    <a href="{% url 'staff_complaints' %}"
+                       class="btn btn-secondary">
+
+                        Back
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<hr class="my-5">
+
+    <hr style="margin:30px 0;">
+
+    <!-- 🧠 EVENT-BASED TIMELINE -->
+    <h3 class="mb-4">
+
+<i class="fa-solid fa-clock-rotate-left"></i>
+
+Activity Timeline
+
+</h3>
+
+<div class="timeline">
+
+{% for activity in complaint.activities.all %}
+
+<div class="card shadow-sm mb-3">
+
+<div class="card-body">
+
+<div class="d-flex justify-content-between align-items-center">
+
+<div>
+
+{% if activity.event_type == "created" %}
+
+<span class="badge bg-primary">
+Complaint Created
+</span>
+
+{% elif activity.event_type == "assigned" %}
+
+<span class="badge bg-info">
+Assigned
+</span>
+
+{% elif activity.event_type == "reassigned" %}
+
+<span class="badge bg-warning text-dark">
+Reassigned
+</span>
+
+{% elif activity.event_type == "resolved" %}
+
+<span class="badge bg-success">
+Resolved
+</span>
+
+
+{% elif activity.event_type == "remarks_added" %}
+
+<span class="badge bg-secondary">
+Remarks
+</span>
+
+{% elif activity.event_type == "sla_created" %}
+
+<span class="badge bg-danger">
+SLA Created
+</span>
+
+{% else %}
+
+<span class="badge bg-dark">
+
+{{ activity.get_event_type_display }}
+
+</span>
+
+{% endif %}
+
+</div>
+
+<small class="text-muted">
+
+{{ activity.created_at|date:"d M Y H:i" }}
+
+</small>
+
+</div>
+
+<hr>
+
+<p class="mb-2">
+
+{{ activity.message }}
+
+</p>
+
+{% if activity.performed_by %}
+
+<small class="text-primary">
+
+<i class="fa-solid fa-user"></i>
+
+{{ activity.performed_by.get_full_name|default:activity.performed_by.username }}
+
+</small>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% empty %}
+
+<div class="alert alert-light">
+
+No activity recorded.
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+{% endblock %}
